@@ -1,8 +1,11 @@
 import React, { FC } from 'react'
 import {useEditor, EditorContent} from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import ToolBar from './ToolBar';
 
-interface Props {}
+interface Props {
+    
+}
 
 const Editor: FC<Props> = (props): JSX.Element => { 
     const editor = useEditor({
@@ -12,7 +15,10 @@ const Editor: FC<Props> = (props): JSX.Element => {
     });
   
     return (
-    <EditorContent editor={editor}/>
+        <div>
+            <ToolBar editor={editor}/>
+            <EditorContent editor={editor}/>
+        </div>
   )
 }
 
