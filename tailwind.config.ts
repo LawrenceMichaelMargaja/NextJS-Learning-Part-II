@@ -31,6 +31,9 @@ const config: Config = {
         width: 'width',
       }
     },
+    backgroundImage: {
+      'png-pattern': "url('/empty-bg.jpg')"
+    }
   },
   plugins: [require("@tailwindcss/typography")],
 }

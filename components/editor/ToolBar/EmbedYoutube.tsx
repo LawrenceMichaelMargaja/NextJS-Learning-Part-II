@@ -27,9 +27,9 @@ const EmbedYoutube: FC<Props> = ({ onSubmit }): JSX.Element => {
         <div onKeyDown={({key}) => {
             if(key === 'Escape') hideForm();
         }} className="relative">
-            <Button onClick={visible ? hideForm : showForm}>
+            <div onClick={visible ? hideForm : showForm}>
                 <BsYoutube/>
-            </Button>
+            </div>
             {visible && 
             <div className="absolute top-full mt-4 right-0 z-50">
                 <div className="flex space-x-2">

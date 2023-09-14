@@ -7,15 +7,26 @@ import Placeholder from '@tiptap/extension-placeholder';
 import Link from '@tiptap/extension-link';
 import EditLink from './Link/EditLink';
 import Youtube from '@tiptap/extension-youtube';
+import GalleryModal, { ImageSelectionResult } from './ToolBar/GalleryModal';
+import TipTapImage from '@tiptap/extension-image';
 
 interface Props {
     
 }
 
+const content = `
+        <></>
+`
+
 const Editor: FC<Props> = (props): JSX.Element => { 
 
     const [selectionRange, setSelectionRange] = useState<Range>();
+    const [uploading, setUploading] = useState(false);
+    const [showGallery, setShowGallery] = useState(false);
 
+    /**
+     * Changes made in this code are that content variable is added to the editor
+     */
     const editor = useEditor({
         extensions: [
             StarterKit,
@@ -37,8 +48,14 @@ const Editor: FC<Props> = (props): JSX.Element => {
                 HTMLAttributes: {
                     class: 'mx-auto rounded',
                 }
+            }),
+            TipTapImage.configure({
+                HTMLAttributes: {
+                    class: 'mx-auto'
+                }
             })
         ],
+        content,
         editorProps: {
             handleClick(view, pos, event) {
                 const {state} = view;
@@ -54,19 +71,57 @@ const Editor: FC<Props> = (props): JSX.Element => {
         }
     });
 
-    useEffect(() => {
-        if(editor && selectionRange) {
-            editor.commands.setTextSelection(selectionRange);
+    /**
+     * This function is used as a callback inside of Gallery Modal and is fired when the handleSubmit of the Gallery Modal component is fired.
+     */
+    const handleImageSelection = (result: ImageSelectionResult) => {
+        editor?.chain().focus().setImage({src: result.src, alt: result.altText}).run();
+    }
+
+    const addImage = () => {
+        const url = window.prompt('URL')
+
+        if (url) {
+            editor.chain().focus().setImage({ src: url }).run()
         }
-    }, [editor, selectionRange])
+    }
+
+    const handleImageUpload = async (image: File) => {
+        setUploading(true);
+        // const formData = new FormData();
+        // formData.append("image", image);
+        // const { data } = await axios.post("/api/image", formData);
+        // setUploading(false);
+    
+        // setImages([data, ...images]);
+      };
+    
+    
+    // useEffect(() => {
+    //     if(editor && selectionRange) {
+    //         editor.commands.setTextSelection(selectionRange);
+    //     }
+    // }, [editor, selectionRange])
   
     return (
-        <div className='p-3 dark:bg-primary-dark bg-primary transition'>
-            <ToolBar editor={editor}/>
-            <div className='h-[1px] w-full bg-secondary-dark dark:bg-secondary-light my-3'/>
-            {editor ? <EditLink editor={editor}/> : null}
-            <EditorContent editor={editor}/>
-        </div>
+        <>
+            <div className='p-3 dark:bg-primary-dark bg-primary transition'>
+                <ToolBar editor={editor} onOpenImageClick={() => setShowGallery(true)}/>
+                <div className='h-[1px] w-full bg-secondary-dark dark:bg-secondary-light my-3'/>
+                {editor ? <EditLink editor={editor}/> : null}
+                <EditorContent editor={editor}/>
+            </div>
+
+            <GalleryModal 
+                visible={showGallery} 
+                onClose={() => setShowGallery(false)}
+                onSelect={handleImageSelection}
+                onFileSelect={handleImageUpload}
+                uploading={uploading}
+                // onImageSelect={handleImageSelection}
+                // onSelect={(result) => console.log("the result === ", result)}
+            />
+        </>
   )
 }
 
