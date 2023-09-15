@@ -24,7 +24,7 @@ const Editor: FC<Props> = (props): JSX.Element => {
     const [selectionRange, setSelectionRange] = useState<Range>();
     const [uploading, setUploading] = useState(false);
     const [showGallery, setShowGallery] = useState(false);
-    const [images, setImages] = useState<{src: string}[]>([]);
+    const [images, setImages] = useState<{ src: string }[]>([]);
 
     /**
      * Changes made in this code are that content variable is added to the editor
@@ -74,7 +74,7 @@ const Editor: FC<Props> = (props): JSX.Element => {
     });
 
     const fetchImages = async () => {
-        const { data } = await axios('/api/image');
+        const {data} = await axios('/api/image');
         // console.log(data)
         setImages(data.images);
     }
@@ -98,7 +98,7 @@ const Editor: FC<Props> = (props): JSX.Element => {
         setUploading(true);
         const formData = new FormData();
         formData.append("image", image);
-        const { data } = await axios.post("/api/image", formData);
+        const {data} = await axios.post("/api/image", formData);
         setUploading(false);
 
         // console.log("the data === ", data);
@@ -119,6 +119,10 @@ const Editor: FC<Props> = (props): JSX.Element => {
     return (
         <>
             <div className='p-3 dark:bg-primary-dark bg-primary transition'>
+                <input type="text"
+                       className="py-2 outline-none bg-transparent w-full border-0 border-b-[1px] border-secondary-dark dark:border-secondary-light text-3xl font-semibold italic text-primary-dark dark:text-primary mb-3"
+                       placeholder="Title..."
+                />
                 <ToolBar editor={editor} onOpenImageClick={() => setShowGallery(true)}/>
                 <div className='h-[1px] w-full bg-secondary-dark dark:bg-secondary-light my-3'/>
                 {editor ? <EditLink editor={editor}/> : null}
