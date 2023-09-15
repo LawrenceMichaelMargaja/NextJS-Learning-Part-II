@@ -71,8 +71,12 @@ const GalleryModal: FC<Props> = ({
                 <div className="flex">
                     {/* gallery */}
                     <div className="basis-[75%] max-h-[450px] overflow-y-auto custom-scroll-bar">
-                        <Gallery images={images} onSelect={(src) => setSelectedImage(src)}
-                                 selectedImage={selectedImage}/>
+                        <Gallery
+                            images={images}
+                            onSelect={(src) => setSelectedImage(src)}
+                            selectedImage={selectedImage}
+                            uploading={uploading}
+                        />
                     </div>
 
                     {/* image selection and upload */}

@@ -62,7 +62,7 @@ const uploadNewImage: NextApiHandler = (req, res) => {
             const {secure_url} = await cloudinary.uploader.upload(imageFile[0].filepath, {
                 folder: 'dev-blogs'
             });
-            res.json({image: secure_url});
+            res.json({src: secure_url});
         } catch (e) {
             console.log("the error === ", e)
         }

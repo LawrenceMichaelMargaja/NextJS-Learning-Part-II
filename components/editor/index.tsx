@@ -96,12 +96,13 @@ const Editor: FC<Props> = (props): JSX.Element => {
 
     const handleImageUpload = async (image: File) => {
         setUploading(true);
-        // const formData = new FormData();
-        // formData.append("image", image);
-        // const { data } = await axios.post("/api/image", formData);
-        // setUploading(false);
+        const formData = new FormData();
+        formData.append("image", image);
+        const { data } = await axios.post("/api/image", formData);
+        setUploading(false);
 
-        // setImages([data, ...images]);
+        // console.log("the data === ", data);
+        setImages([data, ...images]);
     };
 
 
@@ -131,8 +132,6 @@ const Editor: FC<Props> = (props): JSX.Element => {
                 onSelect={handleImageSelection}
                 onFileSelect={handleImageUpload}
                 uploading={uploading}
-                // onImageSelect={handleImageSelection}
-                // onSelect={(result) => console.log("the result === ", result)}
             />
         </>
     )
