@@ -1,28 +1,30 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, {FC, useEffect, useState} from 'react'
 import {useEditor, EditorContent, getMarkRange, Range} from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import ToolBar from './ToolBar';
-import Underline from '@tiptap/extension-underline'; 
+import Underline from '@tiptap/extension-underline';
 import Placeholder from '@tiptap/extension-placeholder';
 import Link from '@tiptap/extension-link';
 import EditLink from './Link/EditLink';
 import Youtube from '@tiptap/extension-youtube';
-import GalleryModal, { ImageSelectionResult } from './ToolBar/GalleryModal';
+import GalleryModal, {ImageSelectionResult} from './ToolBar/GalleryModal';
 import TipTapImage from '@tiptap/extension-image';
+import axios from "axios";
 
 interface Props {
-    
+
 }
 
 const content = `
         <></>
 `
 
-const Editor: FC<Props> = (props): JSX.Element => { 
+const Editor: FC<Props> = (props): JSX.Element => {
 
     const [selectionRange, setSelectionRange] = useState<Range>();
     const [uploading, setUploading] = useState(false);
     const [showGallery, setShowGallery] = useState(false);
+    const [images, setImages] = useState<{src: string}[]>([]);
 
     /**
      * Changes made in this code are that content variable is added to the editor
@@ -61,7 +63,7 @@ const Editor: FC<Props> = (props): JSX.Element => {
                 const {state} = view;
                 const selectionRange = getMarkRange(state.doc.resolve(pos), state.schema.marks.link);
 
-                if(selectionRange) {
+                if (selectionRange) {
                     setSelectionRange(selectionRange);
                 }
             },
@@ -70,6 +72,12 @@ const Editor: FC<Props> = (props): JSX.Element => {
             }
         }
     });
+
+    const fetchImages = async () => {
+        const { data } = await axios('/api/image');
+        // console.log(data)
+        setImages(data.images);
+    }
 
     /**
      * This function is used as a callback inside of Gallery Modal and is fired when the handleSubmit of the Gallery Modal component is fired.
@@ -82,7 +90,7 @@ const Editor: FC<Props> = (props): JSX.Element => {
         const url = window.prompt('URL')
 
         if (url) {
-            editor.chain().focus().setImage({ src: url }).run()
+            editor.chain().focus().setImage({src: url}).run()
         }
     }
 
@@ -92,17 +100,21 @@ const Editor: FC<Props> = (props): JSX.Element => {
         // formData.append("image", image);
         // const { data } = await axios.post("/api/image", formData);
         // setUploading(false);
-    
+
         // setImages([data, ...images]);
-      };
-    
-    
-    // useEffect(() => {
-    //     if(editor && selectionRange) {
-    //         editor.commands.setTextSelection(selectionRange);
-    //     }
-    // }, [editor, selectionRange])
-  
+    };
+
+
+    useEffect(() => {
+        if (editor && selectionRange) {
+            editor.commands.setTextSelection(selectionRange);
+        }
+    }, [editor, selectionRange])
+
+    useEffect(() => {
+        fetchImages()
+    }, [])
+
     return (
         <>
             <div className='p-3 dark:bg-primary-dark bg-primary transition'>
@@ -112,8 +124,9 @@ const Editor: FC<Props> = (props): JSX.Element => {
                 <EditorContent editor={editor}/>
             </div>
 
-            <GalleryModal 
-                visible={showGallery} 
+            <GalleryModal
+                images={images}
+                visible={showGallery}
                 onClose={() => setShowGallery(false)}
                 onSelect={handleImageSelection}
                 onFileSelect={handleImageUpload}
@@ -122,7 +135,7 @@ const Editor: FC<Props> = (props): JSX.Element => {
                 // onSelect={(result) => console.log("the result === ", result)}
             />
         </>
-  )
+    )
 }
 
 export default Editor
