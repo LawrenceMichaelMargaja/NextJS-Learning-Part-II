@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react'
+import React, {ChangeEventHandler, FC, useEffect, useState} from 'react'
 import {useEditor, EditorContent, getMarkRange, Range} from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import ToolBar from './ToolBar';
@@ -10,22 +10,44 @@ import Youtube from '@tiptap/extension-youtube';
 import GalleryModal, {ImageSelectionResult} from './ToolBar/GalleryModal';
 import TipTapImage from '@tiptap/extension-image';
 import axios from "axios";
-import SEOForm from "./SeoForm";
+import SEOForm, {SeoResult} from "./SeoForm";
+import ActionButton from "../common/ActionButton";
+import ThumbnailSelector from "./ThumbnailSelector";
 
-interface Props {
-
+export interface FinalPost extends SeoResult {
+    title: string;
+    content: string;
+    thumbnail?: File | string;
 }
 
-const content = `
-        <></>
-`
+interface Props {
+    initialValue?: FinalPost;
+    btnTitle?: string;
+    busy?: boolean;
+    onSubmit(post: FinalPost): void;
+}
 
-const Editor: FC<Props> = (props): JSX.Element => {
+const content = `Type Something...`
+
+const Editor: FC<Props> = ({
+                               initialValue,
+                               btnTitle = 'Submit',
+                               busy = false,
+                               onSubmit
+}): JSX.Element => {
 
     const [selectionRange, setSelectionRange] = useState<Range>();
     const [uploading, setUploading] = useState(false);
     const [showGallery, setShowGallery] = useState(false);
     const [images, setImages] = useState<{ src: string }[]>([]);
+    const [seoInitialValue, setSeoInitialValue] = useState<SeoResult>();
+    const [post, setPost] = useState<FinalPost>({
+        title: '',
+        content: '',
+        meta: '',
+        tags: '',
+        slug: '',
+    });
 
     /**
      * Changes made in this code are that content variable is added to the editor
@@ -95,6 +117,11 @@ const Editor: FC<Props> = (props): JSX.Element => {
         }
     }
 
+    const handleSubmit = () => {
+        if(!editor) return
+        onSubmit({...post, content: editor.getHTML()});
+    }
+
     const handleImageUpload = async (image: File) => {
         setUploading(true);
         const formData = new FormData();
@@ -106,6 +133,17 @@ const Editor: FC<Props> = (props): JSX.Element => {
         setImages([data, ...images]);
     };
 
+    const updateTitle: ChangeEventHandler<HTMLInputElement> = ({target}) => {
+        setPost({...post, title: target.value});
+    }
+
+    const updateSeoValue = (result: SeoResult) => {
+        setPost({...post, ...result});
+    }
+
+    const updateThumbnail = (file: File) => {
+        setPost({...post, thumbnail: file});
+    }
 
     useEffect(() => {
         if (editor && selectionRange) {
@@ -117,21 +155,46 @@ const Editor: FC<Props> = (props): JSX.Element => {
         fetchImages()
     }, [])
 
+    useEffect(() => {
+        if(initialValue) {
+            setPost({...initialValue})
+            editor?.commands.setContent(initialValue.content);
+
+            const { meta, slug, tags } = initialValue;
+            setSeoInitialValue({ meta, slug, tags });
+        }
+    }, [initialValue, editor]);
+
     return (
         <>
             <div className='p-3 dark:bg-primary-dark bg-primary transition'>
-                <input type="text"
-                       className="py-2 outline-none bg-transparent w-full border-0 border-b-[1px] border-secondary-dark dark:border-secondary-light text-3xl font-semibold italic text-primary-dark dark:text-primary mb-3"
-                       placeholder="Title..."
-                />
-                <ToolBar editor={editor} onOpenImageClick={() => setShowGallery(true)}/>
-                <div className='h-[1px] w-full bg-secondary-dark dark:bg-secondary-light my-3'/>
+                <div className='sticky top-0 z-10 dark:bg-primary-dark bg-primary'>
+                    {/*Thumbnail Selector and Submit Button*/}
+                    <div className="flex items-center justify-between mb-3">
+                        <ThumbnailSelector initialValue={post.thumbnail as string} onChange={updateThumbnail}/>
+                        <div className="inline-block">
+                            <ActionButton busy={busy} title={btnTitle} onClick={handleSubmit} />
+                        </div>
+                    </div>
+
+                    {/*Title Input*/}
+                    <input
+                        type="text"
+                        className="py-2 outline-none bg-transparent w-full border-0 border-b-[1px] border-secondary-dark dark:border-secondary-light text-3xl font-semibold italic text-primary-dark dark:text-primary mb-3"
+                        placeholder="Title..."
+                        onChange={updateTitle}
+                        value={post.title}
+                    />
+                    <ToolBar editor={editor} onOpenImageClick={() => setShowGallery(true)}/>
+                    <div className='h-[1px] w-full bg-secondary-dark dark:bg-secondary-light my-3'/>
+                </div>
+
                 {editor ? <EditLink editor={editor}/> : null}
-                <EditorContent editor={editor}/>
+                <EditorContent editor={editor} className="min-h-[300px]"/>
                 <SEOForm
-                    onChange={(result => {
-                        console.log("the result --- ", result)
-                    })}
+                    onChange={updateSeoValue}
+                    title={post.title}
+                    initialValue={seoInitialValue}
                 />
             </div>
 
