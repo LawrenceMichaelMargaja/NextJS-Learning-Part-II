@@ -128,7 +128,11 @@ const Editor: FC<Props> = (props): JSX.Element => {
                 <div className='h-[1px] w-full bg-secondary-dark dark:bg-secondary-light my-3'/>
                 {editor ? <EditLink editor={editor}/> : null}
                 <EditorContent editor={editor}/>
-                <SEOForm/>
+                <SEOForm
+                    onChange={(result => {
+                        console.log("the result --- ", result)
+                    })}
+                />
             </div>
 
             <GalleryModal

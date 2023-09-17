@@ -1,7 +1,16 @@
-import {ChangeEventHandler, FC, useState} from 'react';
+import {ChangeEventHandler, FC, useEffect, useState} from 'react';
 import classnames from 'classnames';
+import slugify from 'slugify';
+
+export interface SeoResult {
+    meta: string;
+    slug: string;
+    tags: string;
+}
 
 interface Props {
+    title?: string;
+    onChange(result: SeoResult): void;
 }
 
 const commonInput = "w-full bg-transparent outline-none border-2 border-secondary-dark focus:border-primary-dark focus:dark:border-primary rounded transition p-2 text-primary-dark dark:text-primary"
@@ -31,7 +40,7 @@ const Input: FC<{
     )
 }
 
-const SEOForm: FC<Props> = (props): JSX.Element => {
+const SEOForm: FC<Props> = ({title = "", onChange}): JSX.Element => {
 
     const [values, setValues] = useState({meta: '', slug: '', tags: ''});
 
@@ -46,8 +55,17 @@ const SEOForm: FC<Props> = (props): JSX.Element => {
         // }
         if(name === 'meta') value = value.substring(0, 150);
         console.log("the target.name === ", target.name);
-        setValues({...values, [name]: value})
+        const newValues = {...values, [name]: value}
+        setValues(newValues);
+        onChange(newValues);
     }
+
+    useEffect(() => {
+        const slug = slugify(title.toLocaleLowerCase())
+        const newValues = {...values, slug}
+        setValues(newValues);
+        onChange(newValues);
+    }, [title])
 
     const {meta, slug, tags} = values;
 
