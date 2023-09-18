@@ -1,5 +1,7 @@
 import {NextApiHandler} from "next";
 import dbConnect from "../../../lib/dbConnect";
+import Joi from "joi";
+import {postValidationSchema, validateSchema} from "../../../lib/validator";
 
 const handler: NextApiHandler = async (req, res) => {
     const {method} = req
@@ -9,7 +11,21 @@ const handler: NextApiHandler = async (req, res) => {
             await dbConnect();
             res.json({ ok: true });
         }
+        case 'POST': {
+            return createNewPost(req, res)
+        }
     }
 };
+
+const createNewPost: NextApiHandler = (req, res) => {
+    const {body} = req;
+    const error  = validateSchema(postValidationSchema, body);
+
+    if(error) {
+        return res.status(400).json({ error })
+    }
+
+    res.json({ok: true});
+}
 
 export default handler;
