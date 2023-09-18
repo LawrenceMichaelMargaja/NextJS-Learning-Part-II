@@ -1,5 +1,5 @@
-import AdminNav from '@/components/common/AdminNav';
-import AdminLayout from '@/components/layout/AdminLayout';
+import AdminNav from '../../components/common/AdminNav';
+import AdminLayout from '../../components/layout/AdminLayout';
 
 import { NextPage } from 'next';
 

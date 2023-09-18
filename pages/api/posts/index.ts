@@ -52,7 +52,7 @@ const createNewPost: NextApiHandler = async (req, res) => {
         return res.status(400).json({error: "Slug needs to be unique"});
     }
 
-    // create new post
+    // create new posts
     const newPost = new Post({
         title,
         content,

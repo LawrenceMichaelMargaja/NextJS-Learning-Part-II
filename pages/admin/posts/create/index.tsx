@@ -1,7 +1,7 @@
-import Editor from '../../../components/editor';
+import Editor from '../../../../components/editor';
 import { NextPage } from 'next';
-import AdminLayout from "../../../components/layout/AdminLayout";
-import {FinalPost} from "../../../components/editor/index";
+import AdminLayout from "../../../../components/layout/AdminLayout";
+import {FinalPost} from "../../../../components/editor/index";
 import axios from "axios";
 
 interface Props {}
@@ -20,7 +20,7 @@ const Create: NextPage<Props> = () => {
                 } else formData.append(key, value);
             }
 
-            // submit our post
+            // submit our posts
             const { data } = await axios.post("/api/posts", formData);
 
             console.log(data);
