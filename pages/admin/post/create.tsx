@@ -8,29 +8,6 @@ interface Props {}
 
 const Create: NextPage<Props> = () => {
 
-    // const handleSubmit = async (post: FinalPost) => {
-    //
-    //     try {
-    //         // we have to generate FormData
-    //         const formData = new FormData()
-    //         for(let key in post) {
-    //             const value = (post as any)[key]
-    //             if(key === 'tags') {
-    //                 const tags = value.split(',').map((tag: string) => tag.trim());
-    //                 formData.append('tags', JSON.stringify(tags));
-    //             } else {
-    //                 formData.append(key, value);
-    //             }
-    //         };
-    //
-    //         // submit our post
-    //         const { data } = await axios.post('/api/posts');
-    //         console.log("the data from submit post === ", data);
-    //     } catch (error) {
-    //         console.log("the error in the handle submit --- ", error.response.data)
-    //     }
-    // };
-
     const handleSubmit = async (post: FinalPost) => {
         try {
             // we have to generate FormData

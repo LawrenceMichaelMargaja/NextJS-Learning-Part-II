@@ -41,22 +41,11 @@ const readAllImages: NextApiHandler = async (req, res) => {
 
 const uploadNewImage: NextApiHandler = (req, res) => {
 
-    console.log("the process.env.CLOUD_NAME", process.env.CLOUD_NAME);
-    console.log("the process.env.CLOUD_API_KEY", process.env.CLOUD_API_KEY);
-    console.log("the process.env.CLOUD_API_SECRET", process.env.CLOUD_API_SECRET);
-
     const form = formidable();
     form.parse(req, async (err, fields, files) => {
-        console.log('Fields: --- ', fields);
-        console.log('Files: --- ', files);
         if (err) return res.status(500).json({ error: err.message });
 
         const imageFile = files.image as formidable.File;
-        // console.log("the imageFile === ", imageFile)
-        // console.log("the cloudinary === ", cloudinary)
-        // console.log("the cloudinary.v2 === ", cloudinary.v2)
-        // console.log("the filePath === ", imageFile[0].filepath)
-
 
         try {
             const {secure_url} = await cloudinary.uploader.upload(imageFile[0].filepath, {

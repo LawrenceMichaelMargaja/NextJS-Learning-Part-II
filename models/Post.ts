@@ -1,9 +1,27 @@
 import mongoose from 'mongoose';
 const { Schema, models, model } = mongoose;
+import ObjectId from 'mongoose';
+import Model from 'mongoose';
 
 // title, content, slug, tags, thumbnail, meta, author, date
 
-const PostSchema = new Schema(
+/**
+ * Note: importing of "ObjectId and Model are not the same as in the tutorial.
+ * this is because the way it was uploaded there is not working.
+ * This might cause problems in the future though.
+ */
+interface PostModelSchema {
+    title: string;
+    slug: string;
+    meta: string;
+    content: string;
+    tags: string[];
+    thumbnail: { url: string, public_id: string };
+    author: ObjectId;
+    createdAt: Date;
+}
+
+const PostSchema = new Schema<PostModelSchema>(
     {
         title: {
             type: String,
@@ -46,4 +64,4 @@ const PostSchema = new Schema(
 
 const Post = models?.Post || model('Post', PostSchema);
 
-export default Post;
+export default Post as Model<PostModelSchema>;
