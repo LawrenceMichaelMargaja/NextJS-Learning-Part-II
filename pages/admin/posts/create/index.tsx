@@ -3,6 +3,7 @@ import { NextPage } from 'next';
 import AdminLayout from "../../../../components/layout/AdminLayout";
 import {FinalPost} from "../../../../components/editor/index";
 import axios from "axios";
+import {generateFormData} from "../../../../utils/helper";
 
 interface Props {}
 
@@ -11,14 +12,7 @@ const Create: NextPage<Props> = () => {
     const handleSubmit = async (post: FinalPost) => {
         try {
             // we have to generate FormData
-            const formData = new FormData();
-            for (let key in post) {
-                const value = (post as any)[key];
-                if (key === "tags" && value.trim()) {
-                    const tags = value.split(",").map((tag: string) => tag.trim());
-                    formData.append("tags", JSON.stringify(tags));
-                } else formData.append(key, value);
-            }
+            const formData = generateFormData(post);
 
             // submit our posts
             const { data } = await axios.post("/api/posts", formData);
