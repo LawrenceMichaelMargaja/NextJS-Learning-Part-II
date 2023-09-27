@@ -8,7 +8,7 @@ interface Props {}
 const posts = [
     {
         title: "This is my new post for now",
-        slug: "this-is-my-new-post-for-now",
+        slug: "this-is-my-first-post",
         meta: "This is my first post, and typesetting industry.",
         tags: ["post"],
         thumbnail: "https://images.pexels.com/photos/1166209/pexels-photo-1166209.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
@@ -65,7 +65,11 @@ const Posts: NextPage<Props> = () => {
             <div className="max-w-4xl mx-auto p-3">
                 <div className="grid grid-cols-3 gap-4">
                     {postsToRender.map((post) => (
-                        <PostCard post={post}/>
+                        <PostCard
+                            key={post.slug}
+                            post={post}
+                            // busy
+                        />
                     ))}
                 </div>
             </div>
