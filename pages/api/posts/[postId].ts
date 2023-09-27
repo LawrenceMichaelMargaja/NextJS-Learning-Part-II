@@ -2,7 +2,9 @@ import {NextApiHandler} from "next";
 import Post from "../../../models/Post";
 import {readFile} from "../../../lib/utils";
 import {postValidationSchema, validateSchema} from "../../../lib/validator";
+import cloudinary from '../../../lib/cloudinary'
 import {tag} from "postcss-selector-parser";
+import formidable from "formidable";
 
 export const config = {
     api: {
@@ -46,7 +48,7 @@ const updatePost: NextApiHandler = async (req, res) => {
     }
 
     const error = validateSchema(postValidationSchema, {...body, tags})
-    if(error) {
+    if (error) {
         return res.status(400).json({error})
     }
 
@@ -57,6 +59,26 @@ const updatePost: NextApiHandler = async (req, res) => {
     post.meta = meta;
     post.tags = tags;
     post.slug = slug;
+
+    // update thumbnail only if there is any.
+    const thumbnail = files.thumbnail as formidable.File
+    if (thumbnail) {
+        const {secure_url: url, public_id} = await cloudinary.uploader.upload(thumbnail.filepath, {
+            folder: "dev-blogs",
+        });
+
+        /**
+         * #1 - condition => the post can already have a thumbnail so remove the old one and upload the new image and then update the record inside the DB.
+         */
+        const publicId = post.thumbnail?.public_id;
+        if(publicId) {
+            await cloudinary.uploader.destroy(publicId)
+        }
+        /**
+         * #2 = condition => the post can be without thumbnail, just upload image and update the record inside the DB.
+         */
+        post.thumbnail = {url, public_id}
+    }
 
     await post.save();
     res.json({post});

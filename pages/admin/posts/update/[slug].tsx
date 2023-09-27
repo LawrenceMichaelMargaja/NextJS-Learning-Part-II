@@ -79,7 +79,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (co
     } catch (error) {
         // return is different from tutorial because the return statement there caused an error.
         // the return in the tutorial is return { notFound: true }
-        alert("there was an error === " + error.message)
+        console.log("there was an error === ", error.message)
         return
     }
 }
