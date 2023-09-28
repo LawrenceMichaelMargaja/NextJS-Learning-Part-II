@@ -7,6 +7,7 @@ import Link from "next/link";
 interface Props {
     post: PostDetail;
     busy?: boolean;
+    controls?: boolean;
     onDeleteClick?(): void;
 }
 
@@ -17,7 +18,7 @@ const trimText = (text:string, trimBy: number) => {
     return text.substring(0, trimBy).trim() + '...';
 }
 
-const PostCard: FC<Props> = ({post, busy, onDeleteClick}): JSX.Element => {
+const PostCard: FC<Props> = ({ controls = false, post, busy, onDeleteClick}): JSX.Element => {
 
     const {title, slug, meta, tags, thumbnail, createdAt} = post;
 
@@ -56,22 +57,26 @@ const PostCard: FC<Props> = ({post, busy, onDeleteClick}): JSX.Element => {
                     </p>
                 </Link>
 
-                <div className="flex justify-end items-center h-8 mt-auto space-x-4 text-primary-dark dark:text-primary">
-                    {busy ? (
-                        <span className="animate-pulse">
+                {
+                    controls && (
+                        <div className="flex justify-end items-center h-8 mt-auto space-x-4 text-primary-dark dark:text-primary">
+                            {busy ? (
+                                <span className="animate-pulse">
                             Removing
                         </span>
-                    ) : (
-                        <>
-                            <Link href={'posts/update/' + slug} className="hover:underline">
-                                Edit
-                            </Link>
-                            <button onClick={onDeleteClick} className="hover:underline">
-                                Delete
-                            </button>
-                        </>
-                    )}
-                </div>
+                            ) : (
+                                <>
+                                    <Link href={'posts/update/' + slug} className="hover:underline">
+                                        Edit
+                                    </Link>
+                                    <button onClick={onDeleteClick} className="hover:underline">
+                                        Delete
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    )
+                }
             </div>
         </div>
     );
