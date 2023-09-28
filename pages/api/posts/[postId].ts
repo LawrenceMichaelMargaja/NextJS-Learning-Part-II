@@ -5,6 +5,7 @@ import {postValidationSchema, validateSchema} from "../../../lib/validator";
 import cloudinary from '../../../lib/cloudinary'
 import {tag} from "postcss-selector-parser";
 import formidable from "formidable";
+import {IncomingPost} from "../../../utils/types";
 
 export const config = {
     api: {
@@ -22,14 +23,6 @@ const handler: NextApiHandler = (req, res) => {
             res.status(404).send("Not Found!");
     }
 };
-
-interface IncomingPost {
-    title: string;
-    content: string;
-    slug: string;
-    meta: string;
-    tags: string;
-}
 
 const updatePost: NextApiHandler = async (req, res) => {
     const postId = req.query.postId as string;

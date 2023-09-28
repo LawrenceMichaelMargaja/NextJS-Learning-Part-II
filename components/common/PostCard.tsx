@@ -63,7 +63,7 @@ const PostCard: FC<Props> = ({post, busy, onDeleteClick}): JSX.Element => {
                         </span>
                     ) : (
                         <>
-                            <Link href={'admin/posts/update/' + slug} className="hover:underline">
+                            <Link href={'posts/update/' + slug} className="hover:underline">
                                 Edit
                             </Link>
                             <button onClick={onDeleteClick} className="hover:underline">

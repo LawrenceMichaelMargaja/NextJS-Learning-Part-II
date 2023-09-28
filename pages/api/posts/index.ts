@@ -2,10 +2,11 @@ import {NextApiHandler} from "next";
 import dbConnect from "../../../lib/dbConnect";
 import Joi from "joi";
 import {postValidationSchema, validateSchema} from "../../../lib/validator";
-import {readFile} from "../../../lib/utils";
+import {formatPosts, readFile, readPostsFromDb} from "../../../lib/utils";
 import Post from "../../../models/Post";
 import formidable from "formidable";
 import cloudinary from '../../../lib/cloudinary';
+import {IncomingPost} from "../../../utils/types";
 
 export const config = {
     api: {bodyParser: false}
@@ -15,10 +16,8 @@ const handler: NextApiHandler = async (req, res) => {
     const {method} = req
 
     switch (method) {
-        case 'GET': {
-            await dbConnect();
-            res.json({ok: true});
-        }
+        case 'GET':
+            return readPosts(req, res);
         case 'POST': {
             return createNewPost(req, res)
         }
@@ -26,7 +25,7 @@ const handler: NextApiHandler = async (req, res) => {
 };
 
 const createNewPost: NextApiHandler = async (req, res) => {
-    const {files, body} = await readFile(req)
+    const {files, body} = await readFile<IncomingPost>(req)
 
     console.log("the body === ", body);
     let tags = [];
@@ -63,8 +62,8 @@ const createNewPost: NextApiHandler = async (req, res) => {
 
     // Uploading thumbnail if there is any
     const thumbnail = files.thumbnail as formidable.File;
-    if(thumbnail) {
-        const { secure_url: url, public_id } = await cloudinary.uploader.upload(thumbnail.filepath, {
+    if (thumbnail) {
+        const {secure_url: url, public_id} = await cloudinary.uploader.upload(thumbnail.filepath, {
             folder: 'dev-blogs',
         });
         newPost.thumbnail = {url, public_id};
@@ -72,6 +71,18 @@ const createNewPost: NextApiHandler = async (req, res) => {
     await newPost.save();
 
     res.json({post: newPost});
+}
+
+const readPosts: NextApiHandler = async (req, res) => {
+    try {
+        const {limit, pageNo} = req.query as {limit: string, pageNo: string};
+        const posts = await readPostsFromDb(parseInt(limit), parseInt(pageNo));
+        res.json({posts: formatPosts(posts)});
+        return posts;
+    } catch (error: any) {
+        // return {notFound: true};
+        res.status(500).json({error: error.message});
+    }
 }
 
 export default handler;

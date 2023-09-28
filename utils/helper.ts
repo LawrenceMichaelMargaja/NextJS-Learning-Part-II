@@ -1,4 +1,6 @@
 import {FinalPost} from "../components/editor";
+import dbConnect from "../lib/dbConnect";
+import Post from "../models/Post";
 
 export const generateFormData = (post: FinalPost) => {
     const formData = new FormData();

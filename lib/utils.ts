@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
+import dbConnect from "./dbConnect";
+import Post, {PostModelSchema} from "../models/Post";
 
 interface FormidablePromise<T> {
     files: { [key: string]: formidable.File };
@@ -27,4 +29,33 @@ export const readFile = async <T extends object>(
     }
 
     return result;
+};
+
+export const readPostsFromDb = async (limit: number, pageNo: number) => {
+    if(!limit || limit > 10) {
+        throw Error('Please use limit under 10 and a valid page number.');
+    }
+
+    const skip = limit * pageNo
+
+    await dbConnect();
+    const posts = await Post
+        .find()
+        .sort({createdAt: 'desc'})
+        .select("-content")
+        .skip(skip)
+        .limit(limit)
+
+    return posts;
+};
+
+export const formatPosts = (posts: PostModelSchema[]) => {
+    return posts.map((post) => ({
+        title: post.title,
+        slug: post.slug,
+        createdAt: post.createdAt.toString(),
+        thumbnail: post.thumbnail?.url || '',
+        meta: post.meta,
+        tags: post.tags
+    }));
 };
