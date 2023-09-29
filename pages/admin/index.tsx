@@ -1,4 +1,4 @@
-import AdminNav from '../../components/common/AdminNav';
+import AdminNav from '../../components/common/nav/AdminNav';
 import AdminLayout from '../../components/layout/AdminLayout';
 
 import { NextPage } from 'next';

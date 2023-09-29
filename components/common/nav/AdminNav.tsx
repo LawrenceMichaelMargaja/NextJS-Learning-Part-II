@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { FC, useEffect, useRef, useState } from 'react';
-import Logo from './Logo';
+import Logo from '../Logo';
 import { IconType } from 'react-icons';
 import { RiMenuUnfoldFill, RiMenuFoldFill } from 'react-icons/ri';
 

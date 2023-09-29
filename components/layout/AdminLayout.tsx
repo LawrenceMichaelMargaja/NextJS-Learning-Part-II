@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { FC, ReactNode } from 'react';
-import AdminNav from '../common/AdminNav';
+import AdminNav from '../common/nav/AdminNav';
 import { 
     AiOutlineDashboard,
     AiOutlineContainer,
