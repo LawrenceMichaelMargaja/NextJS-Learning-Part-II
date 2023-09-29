@@ -1,0 +1,2 @@
+export { GitHubAuthButton } from './GitHubAuthButton';
+
