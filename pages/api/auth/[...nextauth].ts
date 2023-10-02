@@ -11,25 +11,47 @@ const authOptions: NextAuthOptions = {
             async profile(profile, tokens) {
                 // find out the user
                 await dbConnect();
-                const oldUser = await User.findOne({
+                const oldUser = await User.find({
                     email: profile.email
                 });
+
+                const userProfile = {
+                    email: profile.email,
+                    name: profile.name || profile.login,
+                    avatar: profile.avatar_url,
+                    role: 'user'
+                };
 
                 // store new user in DB.
                 if(!oldUser) {
                     const newUser = new User({
-                        email: profile.email,
-                        name: profile.name || profile.login,
+                        ...userProfile,
                         provider: 'github',
-                        avatar: profile.avatar_url,
                     });
 
                     await newUser.save();
+                } else {
+                    userProfile.role = oldUser.role
                 }
-                return profile;
+                return {
+                    id: profile.id,
+                    email: profile.email,
+                    // role: userProfile.role
+                };
             }
         }),
     ],
+    callbacks: {
+        jwt: async ({token, user, account, profile, isNewUser}) => {
+            if(user) {
+                await dbConnect();
+                const dbUser = await User.findOne({ email: user.email });
+                console.log("DB User:", dbUser); // Log the user fetched from the database
+                if(dbUser) token.role = dbUser.role;
+            }
+            return token;
+        }
+    },
 };
 
 export default NextAuth(authOptions);
