@@ -8,26 +8,37 @@ import ProfileHead from "../ProfileHead";
 import DropdownOptions, {dropDownOptions} from "../DropdownOptions";
 import {signIn, signOut, useSession} from "next-auth/react";
 import {audioWav} from "@cloudinary/url-gen/qualifiers/format";
+import {useRouter} from "next/router";
+import {UserProfile} from "../../../utils/types";
 
 interface Props {};
 
+const defaultOptions: dropDownOptions = [
+    {
+        label: 'Logout',
+        async onClick() { await signOut(); }
+    }
+];
+
 const UserNav: FC<Props> = (props): JSX.Element => {
 
+    const router = useRouter();
     const {data, status} = useSession();
     const isAuth = status === 'authenticated';
+    const profile = data?.user as UserProfile | undefined;
+    const isAdmin = profile && profile.role === 'admin';
 
     const handleLoginWithGithub = async () => {
         const res = await signIn('github');
         console.log("the signIn res === ", res)
     }
 
-    const dropDownOptions: dropDownOptions = [
-        { label: 'Dashboard', onClick() {} },
-        {
-            label: 'Logout',
-            async onClick() { await signOut(); }
-        }
-    ];
+    const dropDownOptions: dropDownOptions = isAdmin ? [{
+        label: 'Dashboard',
+        onClick() {
+            router.push('/admin')
+        },
+    }, ...defaultOptions] : defaultOptions
 
     return (
         <div className='flex items-center justify-between bg-primary-dark p-3'>

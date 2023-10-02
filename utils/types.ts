@@ -15,3 +15,11 @@ export interface IncomingPost {
     meta: string;
     tags: string;
 }
+
+export interface UserProfile {
+    id: string;
+    name: string;
+    email: string;
+    avatar: string | undefined;
+    role: 'user' | 'admin';
+}

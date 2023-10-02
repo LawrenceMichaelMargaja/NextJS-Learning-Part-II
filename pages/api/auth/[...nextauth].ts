@@ -47,10 +47,29 @@ const authOptions: NextAuthOptions = {
                 await dbConnect();
                 const dbUser = await User.findOne({ email: user.email });
                 console.log("DB User:", dbUser); // Log the user fetched from the database
-                if(dbUser) token.role = dbUser.role;
+                if(dbUser) {
+                    token.name = user.name;
+                    token.role = dbUser.role;
+                    token.image = user.image;
+                }
             }
             return token;
-        }
+        },
+        async session({session, token}) {
+            await dbConnect();
+            const user = await User.findOne({email: session.user?.email});
+            if(user) {
+                session.user = {
+                    id: user._id.toString(),
+                    name: user.name,
+                    email: user.email,
+                    avatar: user.avatar,
+                    role: user.role
+                } as any;
+            }
+            console.log('the session === ', session);
+            return session;
+        },
     },
     pages: {
         signIn: '/auth/signin',
