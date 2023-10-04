@@ -20,8 +20,10 @@ const SinglePost: NextPage<Props> = ({ post }) => {
                 </div>
                 )
             : null}
-
-            <div className="flex items-center justify-between py-2">
+            <h1 className='text-6xl font-semibold text-primary-dark dark:text-primary py-2'>
+                {title}
+            </h1>
+            <div className="flex items-center justify-between py-2 text-secondary-dark dark:text-secondary-light">
                 {tags.map((t, index) => (
                     <span key={t + index}>
                         #{t}
@@ -33,7 +35,6 @@ const SinglePost: NextPage<Props> = ({ post }) => {
             </div>
 
             <div className="prose prose-lg dark:prose-invert max-w-full mx-auto">
-                <h1>{title}</h1>
                 {parse(content)}
             </div>
         </DefaultLayout>

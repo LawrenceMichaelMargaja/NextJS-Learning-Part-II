@@ -53,7 +53,7 @@ const LinkForm: FC<Props> = ({visible, initialState, onSubmit}):JSX.Element | nu
                     value={link.url}
                     onChange={({target}) => setLink({ ...link, openInNewTab: target.checked })}
                 />
-                <label htmlFor="open-in-new-tab">
+                <label className='text-secondary-dark dark:text-secondary-light' htmlFor="open-in-new-tab">
                     open in new tab
                 </label>
                 
