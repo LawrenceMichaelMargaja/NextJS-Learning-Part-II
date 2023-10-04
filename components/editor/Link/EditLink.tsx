@@ -44,7 +44,8 @@ const EditLink: FC<Props> = ({editor}): JSX.Element => {
       tippyOptions={{
         onHide: () => {
           setShowEditForm(false);
-        }
+        },
+        appendTo: 'parent'
       }}
     >
       <LinkForm visible={showEditForm} onSubmit={handleSubmit} initialState={getInitialState()} />
