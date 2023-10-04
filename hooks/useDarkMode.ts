@@ -34,6 +34,16 @@ const useDarkMode = () => {
         if(oldTheme) {
             return updateTheme(oldTheme);
         }
+
+        const runningOnDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+
+        if(runningOnDarkMode) {
+            updateTheme(darkTheme);
+            storeThemeToLs(darkTheme);
+        } else {
+            updateTheme(defaultTheme);
+            storeThemeToLs(defaultTheme);
+        }
     }, [])
 
     return {toggleTheme};
