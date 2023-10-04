@@ -1,10 +1,11 @@
 import {GetServerSideProps, InferGetServerSidePropsType, NextPage} from 'next';
 import DefaultLayout from "../components/layout/DefaultLayout";
 import {formatPosts, readPostsFromDb} from "../lib/utils";
-import {PostDetail} from "../utils/types";
+import {PostDetail, UserProfile} from "../utils/types";
 import InfiniteScrollPosts from "../components/common/InfiniteScrollPosts";
 import {useState} from "react";
 import axios from "axios";
+import {useSession} from "next-auth/react";
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
@@ -14,7 +15,9 @@ const Home: NextPage<Props> = ({posts}) => {
     const [postsToRender, setPostsToRender] = useState(posts);
     const [hasMorePosts, setHasMorePosts] = useState(true);
 
-    const isAdmin = false;
+    const {data} = useSession();
+    const profile = data?.user as UserProfile;
+    const isAdmin = profile && profile.role === 'admin';
 
     // fetches the posts from the db and sets the value of the local state(postsToRender)
     // value of postsToRender is then passed as props into the component InfiniteScrollPosts
