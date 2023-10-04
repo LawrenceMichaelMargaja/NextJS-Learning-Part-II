@@ -10,11 +10,15 @@ type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const Home: NextPage<Props> = ({posts}) => {
 
+    //
     const [postsToRender, setPostsToRender] = useState(posts);
     const [hasMorePosts, setHasMorePosts] = useState(true);
 
     const isAdmin = false;
 
+    // fetches the posts from the db and sets the value of the local state(postsToRender)
+    // value of postsToRender is then passed as props into the component InfiniteScrollPosts
+    // the function itself is passed as a value of the next attribute of the Infinite Scroll component which automatically fires based on the logic of the function.
     const fetchMorePosts = async () => {
         try {
             pageNo++
