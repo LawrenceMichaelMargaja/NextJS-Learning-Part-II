@@ -26,7 +26,7 @@ const Home: NextPage<Props> = ({posts}) => {
     const fetchMorePosts = async () => {
         try {
             pageNo++
-            const { data } = await axios(`/api/posts?limit=${limit}&pageNo=${pageNo}`);
+            const { data } = await axios(`/api/posts?limit=${limit}&skip=${postsToRender.length}`);
 
             // this checks if the number of posts is less than the limit and if it is less than the limit that means we've run out of posts in the DB.
             if(data.posts.length < limit) {
