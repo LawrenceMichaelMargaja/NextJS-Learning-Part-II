@@ -7,6 +7,8 @@ import {formatPosts, readPostsFromDb} from "../../../lib/utils";
 import InfiniteScrollPosts from "../../../components/common/InfiniteScrollPosts";
 import axios from "axios";
 import ConfirmModal from "../../../components/common/ConfirmModal";
+import {filter} from "domutils";
+import {filterPosts} from "../../../utils/helper";
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
@@ -45,6 +47,7 @@ const Posts: NextPage<Props> = ({posts}) => {
                     dataLength={postsToRender.length}
                     posts={postsToRender}
                     showControls
+                    onPostRemoved={(post) => setPostsToRender(filterPosts(posts, post))}
                 />
             </AdminLayout>
         </>
