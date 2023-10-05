@@ -13,7 +13,7 @@ interface Props extends ModalProps {
 
 const commonBtcClasses = 'px-3 py-1 text-white rounded';
 
-const ConfirmModal: FC<Props> = ({visible, onClose, title, subTitle, onCancel, onConfirm, busy = true}): JSX.Element => {
+const ConfirmModal: FC<Props> = ({visible, onClose, title, subTitle, onCancel, onConfirm, busy = false}): JSX.Element => {
     return (
         <ModalContainer visible={visible} onClose={onClose}>
             <div className="bg-primary-dark dark:bg-primary rounded p-3">
@@ -30,8 +30,18 @@ const ConfirmModal: FC<Props> = ({visible, onClose, title, subTitle, onCancel, o
                 )}
                 {!busy && (
                     <div className="flex items-center space-x-2 pt-2">
-                        <button className={classNames(commonBtcClasses, 'bg-red-500')}>Confirm</button>
-                        <button className={classNames(commonBtcClasses, 'bg-blue-500')}>Cancel</button>
+                        <button
+                            onClick={onConfirm}
+                            className={classNames(commonBtcClasses, 'bg-red-500')}
+                        >
+                            Confirm
+                        </button>
+                        <button
+                            onClick={onCancel}
+                            className={classNames(commonBtcClasses, 'bg-blue-500')}
+                        >
+                            Cancel
+                        </button>
                     </div>
                 )}
             </div>

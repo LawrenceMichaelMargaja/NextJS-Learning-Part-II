@@ -17,6 +17,7 @@ const { Schema, Types, models, model, ObjectId, Model } = mongoose;
  */
 
 export interface PostModelSchema {
+    _id: typeof ObjectId;
     title: string;
     slug: string;
     meta: string;
