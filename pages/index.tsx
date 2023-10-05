@@ -49,7 +49,7 @@ const Home: NextPage<Props> = ({posts}) => {
                 dataLength={postsToRender.length}
                 posts={postsToRender}
                 showControls={isAdmin}
-                onPostRemoved={(post) => setPostsToRender(filterPosts(posts, post))}
+                onPostRemoved={(post) => setPostsToRender(filterPosts(postsToRender, post))}
             />
         </DefaultLayout>
     )
