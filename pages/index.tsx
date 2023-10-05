@@ -14,7 +14,7 @@ const Home: NextPage<Props> = ({posts}) => {
 
     //
     const [postsToRender, setPostsToRender] = useState(posts);
-    const [hasMorePosts, setHasMorePosts] = useState(true);
+    const [hasMorePosts, setHasMorePosts] = useState(posts.length >= limit);
 
     const {data} = useSession();
     const profile = data?.user as UserProfile;
