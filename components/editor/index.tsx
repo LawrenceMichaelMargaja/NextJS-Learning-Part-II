@@ -114,7 +114,7 @@ const Editor: FC<Props> = ({
         const url = window.prompt('URL')
 
         if (url) {
-            editor.chain().focus().setImage({src: url}).run()
+            editor?.chain().focus().setImage({src: url}).run()
         }
     }
 

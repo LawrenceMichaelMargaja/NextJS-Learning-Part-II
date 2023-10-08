@@ -45,7 +45,7 @@ const SEOForm: FC<Props> = ({title = "", onChange, initialValue}): JSX.Element =
 
     const [values, setValues] = useState({meta: '', slug: '', tags: ''});
 
-    const handleChange: ChangeEventHandler<HTMLInputElement | HTMLInputElement> = ({target}) => {
+    const handleChange: ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement> = ({target}) => {
         let {name, value} = target
         /**
          * The commented out code is below and it works but I decided to use the code from the tutorial.
@@ -59,20 +59,24 @@ const SEOForm: FC<Props> = ({title = "", onChange, initialValue}): JSX.Element =
         const newValues = {...values, [name]: value}
         setValues(newValues);
         onChange(newValues);
-    }
+    };
 
     useEffect(() => {
-        const slug = slugify(title.toLocaleLowerCase())
+        const slug = slugify(title.toLocaleLowerCase(), {
+            strict: true
+        })
         const newValues = {...values, slug}
         setValues(newValues);
         onChange(newValues);
-    }, [title])
+    }, [title]);
 
     useEffect(() => {
         if(initialValue) {
-            setValues({...initialValue, slug: slugify(initialValue.slug)})
+            setValues({...initialValue, slug: slugify(initialValue.slug, {
+                strict: true
+                })})
         }
-    }, [initialValue])
+    }, [initialValue]);
 
     const {meta, slug, tags} = values;
 

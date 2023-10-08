@@ -1,14 +1,12 @@
 import AdminLayout from '../../../components/layout/AdminLayout';
 import {GetServerSideProps, InferGetServerSidePropsType, NextPage} from 'next';
 import {useState} from "react";
-import PostCard from "../../../components/common/PostCard";
 import {PostDetail} from "../../../utils/types";
 import {formatPosts, readPostsFromDb} from "../../../lib/utils";
 import InfiniteScrollPosts from "../../../components/common/InfiniteScrollPosts";
 import axios from "axios";
-import ConfirmModal from "../../../components/common/ConfirmModal";
-import {filter} from "domutils";
 import {filterPosts} from "../../../utils/helper";
+
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
@@ -58,22 +56,48 @@ interface ServerSideResponse {
     posts: PostDetail[];
 }
 
-export const getServerSideProps: GetServerSideProps<ServerSideResponse> = async () => {
+// export const getServerSideProps: GetServerSideProps<ServerSideResponse> = async () => {
+//
+//     try {
+//         //read posts
+//         const posts = await readPostsFromDb(limit, pageNo);
+//         //format posts
+//         const formattedPosts = formatPosts(posts);
+//         return {
+//             props: {
+//                 posts: formattedPosts
+//             }
+//         }
+//     } catch (error) {
+//         // return {notFound: true}
+//         console.log(" the error === ", error)
+//         return
+//     }
+// };
 
+// from chat gpt
+export const getServerSideProps: GetServerSideProps<ServerSideResponse> = async () => {
     try {
-        //read posts
+        // read posts
         const posts = await readPostsFromDb(limit, pageNo);
-        //format posts
+        // format posts
         const formattedPosts = formatPosts(posts);
         return {
             props: {
                 posts: formattedPosts
             }
-        }
+        };
     } catch (error) {
-        // return {notFound: true}
-        console.log(" the error === ", error)
-        return
+        console.log(" the error === ", error);
+
+        // Return an empty posts array in case of an error
+        return {
+            props: {
+                posts: []
+            }
+        };
     }
 };
+
+
 export default Posts;

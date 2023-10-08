@@ -3,9 +3,7 @@
 // import ObjectId from 'mongoose';
 // import Model from 'mongoose';
 
-import * as mongoose from "mongoose";
-
-const { Schema, Types, models, model, ObjectId, Model } = mongoose;
+import mongoose, { Document, Model, Schema, Types } from 'mongoose';
 
 /**
  * Note: importing of "ObjectId and Model are not the same as in the tutorial.
@@ -16,17 +14,18 @@ const { Schema, Types, models, model, ObjectId, Model } = mongoose;
  * const { Schema, models, model, ObjectId, Model } = mongoose;
  */
 
-export interface PostModelSchema {
-    _id: typeof ObjectId;
+export interface PostModelSchema extends Document {
+    _id: Types.ObjectId;
     title: string;
     slug: string;
     meta: string;
     content: string;
     tags: string[];
     thumbnail: { url: string, public_id: string };
-    author: mongoose.Types.ObjectId;
+    author: Types.ObjectId;
     createdAt: Date;
 }
+
 
 const PostSchema = new Schema<PostModelSchema>(
     {
@@ -60,15 +59,18 @@ const PostSchema = new Schema<PostModelSchema>(
             public_id: String,
         },
         author: {
-            type: mongoose.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: 'User',
         },
+
     },
     {
         timestamps: true
     }
 );
 
-const Post = models?.Post || mongoose.model('Post', PostSchema);
+// const Post = models?.Post || mongoose.model('Post', PostSchema);
+const Post = mongoose.models.Post || mongoose.model('Post', PostSchema);
+
 
 export default Post as mongoose.Model<PostModelSchema>;

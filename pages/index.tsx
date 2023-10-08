@@ -11,8 +11,6 @@ import {filterPosts} from "../utils/helper";
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const Home: NextPage<Props> = ({posts}) => {
-
-    //
     const [postsToRender, setPostsToRender] = useState(posts);
     const [hasMorePosts, setHasMorePosts] = useState(posts.length >= limit);
 
@@ -63,7 +61,6 @@ let pageNo = 0;
 const limit = 9;
 
 export const getServerSideProps: GetServerSideProps<ServerSideResponse> = async () => {
-
     try {
         //read posts
         const posts = await readPostsFromDb(limit, pageNo);
@@ -77,7 +74,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideResponse> = async 
     } catch (error) {
         // return {notFound: true}
         console.log(" the error === ", error)
-        return
+        return { notFound: true }
     }
 };
 

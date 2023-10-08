@@ -26,7 +26,7 @@ const Gallery: FC<Props> = ({images, uploading = false, selectedImage = '', onSe
             {images.map(({src}, index) => {
                 return (
                     <div key={index} className="basis-1/4 p-2">
-                        <Image onClick={() => onSelect(src)} src={src} selected={selectedImage === src}/>
+                        <Image onClick={() => onSelect(src)} src={src} selected={selectedImage === src} alt="an image"/>
                     </div>
                 )
             })}

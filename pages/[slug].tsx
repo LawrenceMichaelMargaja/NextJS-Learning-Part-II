@@ -92,7 +92,7 @@ export const getStaticProps: GetStaticProps<StaticPropsResponse, {slug: string}>
         return {
             props: {
                 post: {
-                    _id: _id.toString(),
+                    id: _id.toString(),
                     title,
                     content,
                     meta,

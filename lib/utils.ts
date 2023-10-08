@@ -2,9 +2,17 @@ import { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
 import dbConnect from "./dbConnect";
 import Post, {PostModelSchema} from "../models/Post";
+import {getServerSession} from "next-auth";
+import {authOptions} from "../pages/api/auth/[...nextauth]";
+import {UserProfile} from "../utils/types";
+
+// interface FormidablePromise<T> {
+//     files: { [key: string]: formidable.File};
+//     body: T;
+// }
 
 interface FormidablePromise<T> {
-    files: { [key: string]: formidable.File };
+    files: formidable.Files;
     body: T;
 }
 
@@ -20,13 +28,26 @@ export const readFile = async <T extends object>(
     if (!result.files) result.files = {};
 
     for (let key in fields) {
-        result.body[key] = fields[key][0];
+        if (fields[key]) {
+            result.body[key] = (fields[key] as any[])[0];
+        }
     }
 
     for (let key in files) {
-        const file = files[key][0];
-        result.files[key] = file;
+        const fileOrFiles = files[key];
+
+        if (Array.isArray(fileOrFiles)) {
+            const file = fileOrFiles[0]; // Grabbing the first file if it's an array
+            result.files[key] = file;
+        } else if (fileOrFiles) {
+            result.files[key] = fileOrFiles; // Assigning directly if it's a single file
+        }
     }
+
+    // for (let key in files) {
+    //     const file = files[key][0];
+    //     result.files[key] = file;
+    // }
 
     return result;
 };
@@ -59,4 +80,10 @@ export const formatPosts = (posts: PostModelSchema[]) => {
         meta: post.meta,
         tags: post.tags
     }));
+};
+
+export const isAdmin = async (req: NextApiRequest, res: NextApiResponse) => {
+    const session = await getServerSession(req, res, authOptions);
+    const user = session?.user as UserProfile
+    return user && user.role === 'admin'
 };

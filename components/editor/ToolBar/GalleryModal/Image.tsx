@@ -6,6 +6,7 @@ interface Props {
     src: string;
     selected?: boolean;
     onClick?(): void;
+    alt: string;
 }
 
 const Image: FC<Props> = ({src, selected, onClick}): JSX.Element => {

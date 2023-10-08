@@ -1,5 +1,6 @@
 import {ChangeEventHandler, FC, useEffect, useState} from 'react';
 import classNames from "classnames";
+import Image from "next/image";
 
 interface Props {
     initialValue?: string;
@@ -38,7 +39,7 @@ const ThumbnailSelector: FC<Props> = ({initialValue, onChange}): JSX.Element => 
             />
             <label htmlFor="thumbnail">
                 { selectedThumbnail ?
-                    (<img src={selectedThumbnail} alt="" className={classNames(commonClass, 'object-cover')}/>) : (<PosterUI label="Thumbnail"/>)}
+                    (<Image src={selectedThumbnail} alt="an image" className={classNames(commonClass, 'object-cover')}/>) : (<PosterUI label="Thumbnail"/>)}
             </label>
         </div>
     );
