@@ -66,7 +66,7 @@ const PostCard: FC<Props> = ({ controls = false, post, busy, onDeleteClick}): JS
                         </span>
                             ) : (
                                 <>
-                                    <Link href={'posts/update/' + slug} className="hover:underline">
+                                    <Link href={'admin/posts/update/' + slug} className="hover:underline">
                                         Edit
                                     </Link>
                                     <button onClick={onDeleteClick} className="hover:underline">

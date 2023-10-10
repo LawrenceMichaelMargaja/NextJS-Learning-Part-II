@@ -39,7 +39,7 @@ const ThumbnailSelector: FC<Props> = ({initialValue, onChange}): JSX.Element => 
             />
             <label htmlFor="thumbnail">
                 { selectedThumbnail ?
-                    (<Image src={selectedThumbnail} alt="an image" className={classNames(commonClass, 'object-cover')}/>) : (<PosterUI label="Thumbnail"/>)}
+                    (<img src={selectedThumbnail} alt="an image" className={classNames(commonClass, 'object-cover')}/>) : (<PosterUI label="Thumbnail"/>)}
             </label>
         </div>
     );
