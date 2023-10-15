@@ -6,8 +6,7 @@ import {HiLightBulb} from "react-icons/hi";
 import {GitHubAuthButton} from "../../button";
 import ProfileHead from "../ProfileHead";
 import DropdownOptions, {dropDownOptions} from "../DropdownOptions";
-import {signIn, signOut, useSession} from "next-auth/react";
-import {audioWav} from "@cloudinary/url-gen/qualifiers/format";
+import {signOut, useSession} from "next-auth/react";
 import {useRouter} from "next/router";
 import {UserProfile} from "../../../utils/types";
 import useDarkMode from "../../../hooks/useDarkMode";
@@ -33,11 +32,6 @@ const UserNav: FC<Props> = (props): JSX.Element => {
 
     const { toggleTheme } = useDarkMode();
 
-    const handleLoginWithGithub = async () => {
-        const res = await signIn('github');
-        console.log("the signIn res === ", res)
-    }
-
     const dropDownOptions: dropDownOptions = isAdmin ? [{
         label: 'Dashboard',
         onClick() {
@@ -61,7 +55,7 @@ const UserNav: FC<Props> = (props): JSX.Element => {
                 {isAuth ? (
                     <DropdownOptions options={dropDownOptions} head={<ProfileHead initialName='L' lightOnly/>}/>
                 ): (
-                    <GitHubAuthButton onClick={handleLoginWithGithub} lightOnly/>
+                    <GitHubAuthButton lightOnly/>
                 )}
 
             </div>
