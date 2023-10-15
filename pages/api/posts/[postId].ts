@@ -51,6 +51,8 @@ const removePost: NextApiHandler = async (req, res) => {
 
 //from chatgpt
 const updatePost: NextApiHandler = async (req, res) => {
+    console.log("the request --- ", req.query);
+    console.log("the request body --- ", req.body);
     const admin = await isAdmin(req, res);
     if (!admin) {
         return res.status(401).json({error: "Unauthorized Request!"});
@@ -63,6 +65,8 @@ const updatePost: NextApiHandler = async (req, res) => {
     }
 
     const {files, body} = await readFile<IncomingPost>(req);
+    console.log("files --- ", files);
+    console.log("body --- ", body);
 
     // ... [rest of the code for tags, error checking, and post properties]
 

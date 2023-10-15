@@ -101,7 +101,8 @@ export const getStaticProps: GetStaticProps<StaticPropsResponse, {slug: string}>
                     thumbnail: thumbnail?.url || '',
                     createdAt: createdAt.toString()
                 }
-            }
+            },
+            revalidate: 10
         }
     } catch (error) {
         return { notFound: true };

@@ -20,11 +20,12 @@ const Update: NextPage<Props> = ({post}) => {
     const handleSubmit = async (post: FinalPost) => {
         try {
             // we have to generate FormData
+            console.log("the post --- ", post.content)
             const formData = generateFormData(post);
 
             // submit our posts
             const {data} = await axios.patch("/api/posts/" + post.id, formData);
-            // console.log(data);
+            console.log("the data === ", data);
         } catch (error: any) {
             console.log(error.response.data);
         }

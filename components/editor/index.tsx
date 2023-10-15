@@ -28,7 +28,7 @@ interface Props {
     onSubmit(post: FinalPost): void;
 }
 
-const content = `Type Something...`
+// const content = `Type Something...`
 
 const Editor: FC<Props> = ({
                                initialValue,
@@ -81,12 +81,12 @@ const Editor: FC<Props> = ({
                 }
             })
         ],
-        content,
+        // content,
         editorProps: {
             handleClick(view, pos, event) {
                 const {state} = view;
                 const selectionRange = getMarkRange(state.doc.resolve(pos), state.schema.marks.link);
-
+                // console.log("the selection range === ", selectionRange);
                 if (selectionRange) {
                     setSelectionRange(selectionRange);
                 }
@@ -119,6 +119,8 @@ const Editor: FC<Props> = ({
     }
 
     const handleSubmit = () => {
+        // console.log("Current Post State:", post);
+        // console.log("Editor HTML:", editor.getHTML());
         if(!editor) return
         onSubmit({...post, content: editor.getHTML()});
     }
@@ -157,7 +159,9 @@ const Editor: FC<Props> = ({
     }, [])
 
     useEffect(() => {
+        console.log("i am run")
         if(initialValue) {
+            // console.log("the initialValue.content== ", initialValue.content);
             setPost({...initialValue})
             editor?.commands.setContent(initialValue.content);
 

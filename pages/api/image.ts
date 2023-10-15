@@ -29,7 +29,7 @@ const readAllImages: NextApiHandler = async (req, res) => {
             return res.status(401).json({error: "Unauthorized Request!"});
         };
 
-        console.log("hey I made it here")
+        // console.log("hey I made it here")
         const {resources} = await cloudinary.api.resources({
             resource_type: 'image',
             type: 'upload',

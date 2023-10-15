@@ -67,7 +67,7 @@ export const authOptions: NextAuthOptions = {
                     role: user.role
                 } as any;
             }
-            console.log('the session === ', session);
+            // console.log('the session === ', session);
             return session;
         },
     },
