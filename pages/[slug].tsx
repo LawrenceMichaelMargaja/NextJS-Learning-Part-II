@@ -46,7 +46,7 @@ const SinglePost: NextPage<Props> = ({ post }) => {
                 {/*  comment form  */}
                 <div className='py-20'>
                     {userProfile ? (
-                        <CommentForm/>
+                        <CommentForm title="Add Comment"/>
                     ) : (
                         <div className="flex flex-col items-end space-y-2">
                             <h3 className='text-secondary-dark text-xl font-semibold'>Log in to add comment</h3>
@@ -120,7 +120,7 @@ export const getStaticProps: GetStaticProps<StaticPropsResponse, {slug: string}>
                     createdAt: createdAt.toString()
                 }
             },
-            revalidate: 10
+            revalidate: 5
         }
     } catch (error) {
         return { notFound: true };
