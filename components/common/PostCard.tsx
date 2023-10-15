@@ -1,8 +1,10 @@
 import { FC } from 'react';
-import {PostDetail} from "../../utils/types";
+import {PostDetail, UserProfile} from "../../utils/types";
 import dateformat from 'dateformat'
 import Image from "next/image";
 import Link from "next/link";
+import {useRouter} from "next/router";
+import {useSession} from "next-auth/react";
 
 interface Props {
     post: PostDetail;
@@ -19,6 +21,12 @@ const trimText = (text:string, trimBy: number) => {
 }
 
 const PostCard: FC<Props> = ({ controls = false, post, busy, onDeleteClick}): JSX.Element => {
+
+    const router = useRouter();
+    const {data, status} = useSession();
+    const isAuth = status === 'authenticated';
+    const profile = data?.user as UserProfile | undefined;
+    const isAdmin = profile && profile.role === 'admin';
 
     const {title, slug, meta, tags, thumbnail, createdAt} = post;
 
@@ -66,7 +74,7 @@ const PostCard: FC<Props> = ({ controls = false, post, busy, onDeleteClick}): JS
                         </span>
                             ) : (
                                 <>
-                                    <Link href={'admin/posts/update/' + slug} className="hover:underline">
+                                    <Link href={'/admin/posts/update/' + slug} className="hover:underline">
                                         Edit
                                     </Link>
                                     <button onClick={onDeleteClick} className="hover:underline">
