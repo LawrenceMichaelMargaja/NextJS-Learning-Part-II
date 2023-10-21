@@ -16,6 +16,7 @@ const CommentSchema = new Schema<IComment>({
     belongsTo: {
         type: Schema.Types.ObjectId,
         ref: "Post"
+        // tutorial added "required: true" but pinged that we should not add it.
     },
     owner: {
         type: Schema.Types.ObjectId,
