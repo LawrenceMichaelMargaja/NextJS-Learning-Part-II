@@ -33,7 +33,9 @@ export const postValidationSchema = Joi.object().keys({
 });
 
 export const commentValidationSchema = Joi.object().keys({
-    belongsTo: Joi.string().required().custom((value, helper) => {
+    belongsTo: Joi.string()
+        // .required()
+        .custom((value, helper) => {
         if(!isValidObjectId(value)) {
             return helper.error("any.invalid")
         } else {
