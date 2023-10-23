@@ -16,10 +16,10 @@ const handler: NextApiHandler = (req, res) => {
 };
 
 const addReplyToComment: NextApiHandler = async (req, res) => {
-    // const user = await isAuth(req, res);
-    // if(!user) {
-    //     return res.status(403).send({error: "Unauthorized Request!"});
-    // }
+    const user = await isAuth(req, res);
+    if(!user) {
+        return res.status(403).send({error: "Unauthorized Request!"});
+    }
 
     const error = validateSchema(commentValidationSchema, req.body)
     if(error) {
@@ -43,7 +43,7 @@ const addReplyToComment: NextApiHandler = async (req, res) => {
     }
 
     const replyComment = new Comment({
-        owner: '6522da68261ec5b9a9038367',
+        owner: user.id,
         repliedTo,
         content: req.body.content
     })
